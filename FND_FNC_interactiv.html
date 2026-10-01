@@ -29,6 +29,7 @@ th{background:var(--bg)}.t1{color:var(--ok);font-weight:700}.t0{color:var(--no)}
 .res.y{background:rgba(22,163,74,.15);color:var(--ok)}.res.n{background:rgba(220,38,38,.15);color:var(--no)}
 .err{color:var(--no)}
 .n{display:inline-block;border-top:.1em solid currentColor;line-height:1.1;padding-top:.12em;margin-inline:.04em;white-space:nowrap}
+.tw{overflow-x:auto}.ft td:first-child,.ft td:nth-child(3){font-family:ui-monospace,Menlo,monospace;white-space:nowrap}.ft td:last-child{text-align:left}h3{margin:1em 0 .2em;font-size:1.05rem}
 select{padding:9px;border-radius:9px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit;max-width:100%}
 </style>
 </head>
@@ -81,6 +82,53 @@ Exemplu: „Pot intra în club dacă <i>(am bilet SAU sunt invitat)</i> ȘI <i>(
 </div>
 <div id="pretty" class="f"></div>
 <div id="calc"></div>
+</div>
+
+<div class="card">
+<h2>5. Toate formulele, într-un loc</h2>
+<p class="mut">X, Y, Z pot fi orice variabilă sau formulă. Citești de la stânga la dreapta: ce ai, în ce se transformă.</p>
+<h3>Elimini → și ↔ (primul pas)</h3>
+<div class="tw"><table class="ft"><tr><th>Ai</th><th></th><th>Devine</th><th>Nume</th></tr>
+<tr><td>X → Y</td><td>≡</td><td>¬X ∨ Y</td><td class="mut">implicația</td></tr>
+<tr><td>X ↔ Y</td><td>≡</td><td>(¬X ∨ Y) ∧ (¬Y ∨ X)</td><td class="mut">forma FNC</td></tr>
+<tr><td>X ↔ Y</td><td>≡</td><td>(X ∧ Y) ∨ (¬X ∧ ¬Y)</td><td class="mut">forma FND</td></tr>
+</table></div>
+<h3>Negația (pasul 2)</h3>
+<div class="tw"><table class="ft"><tr><th>Ai</th><th></th><th>Devine</th><th>Nume</th></tr>
+<tr><td>¬¬X</td><td>≡</td><td>X</td><td class="mut">dubla negație</td></tr>
+<tr><td>¬(X ∧ Y)</td><td>≡</td><td>¬X ∨ ¬Y</td><td class="mut">De Morgan</td></tr>
+<tr><td>¬(X ∨ Y)</td><td>≡</td><td>¬X ∧ ¬Y</td><td class="mut">De Morgan</td></tr>
+<tr><td>¬(X → Y)</td><td>≡</td><td>X ∧ ¬Y</td><td class="mut">negarea implicației</td></tr>
+<tr><td>¬(X ↔ Y)</td><td>≡</td><td>(X ∧ ¬Y) ∨ (¬X ∧ Y)</td><td class="mut">negarea echivalenței</td></tr>
+<tr><td>X → Y</td><td>≡</td><td>¬Y → ¬X</td><td class="mut">contrapoziția</td></tr>
+</table></div>
+<h3>Distribuirea (pasul 3)</h3>
+<div class="tw"><table class="ft"><tr><th>Ai</th><th></th><th>Devine</th><th>Nume</th></tr>
+<tr><td>X ∧ (Y ∨ Z)</td><td>≡</td><td>(X ∧ Y) ∨ (X ∧ Z)</td><td class="mut">pentru FND</td></tr>
+<tr><td>X ∨ (Y ∧ Z)</td><td>≡</td><td>(X ∨ Y) ∧ (X ∨ Z)</td><td class="mut">pentru FNC</td></tr>
+</table></div>
+<h3>Simplificarea (pasul 4)</h3>
+<div class="tw"><table class="ft"><tr><th>Ai</th><th></th><th>Devine</th><th>Nume</th></tr>
+<tr><td>X ∨ ¬X</td><td>≡</td><td>1</td><td class="mut">tautologie</td></tr>
+<tr><td>X ∧ ¬X</td><td>≡</td><td>0</td><td class="mut">contradicție</td></tr>
+<tr><td>X ∧ X</td><td>≡</td><td>X</td><td class="mut">idempotență</td></tr>
+<tr><td>X ∨ X</td><td>≡</td><td>X</td><td class="mut">idempotență</td></tr>
+<tr><td>X ∨ 0</td><td>≡</td><td>X</td><td class="mut">element neutru</td></tr>
+<tr><td>X ∧ 1</td><td>≡</td><td>X</td><td class="mut">element neutru</td></tr>
+<tr><td>X ∨ 1</td><td>≡</td><td>1</td><td class="mut">dominare</td></tr>
+<tr><td>X ∧ 0</td><td>≡</td><td>0</td><td class="mut">dominare</td></tr>
+<tr><td>¬1</td><td>≡</td><td>0</td><td class="mut">negația constantelor</td></tr>
+<tr><td>¬0</td><td>≡</td><td>1</td><td class="mut">negația constantelor</td></tr>
+<tr><td>X ∨ (X ∧ Y)</td><td>≡</td><td>X</td><td class="mut">absorbție</td></tr>
+<tr><td>X ∧ (X ∨ Y)</td><td>≡</td><td>X</td><td class="mut">absorbție</td></tr>
+<tr><td>X ∧ Y</td><td>≡</td><td>Y ∧ X</td><td class="mut">comutativitate (la fel pentru ∨)</td></tr>
+<tr><td>(X ∧ Y) ∧ Z</td><td>≡</td><td>X ∧ (Y ∧ Z)</td><td class="mut">asociativitate (la fel pentru ∨)</td></tr>
+</table></div>
+<h3>Forma perfectă (completezi variabilele lipsă)</h3>
+<div class="tw"><table class="ft"><tr><th>Ai</th><th></th><th>Devine</th><th>Nume</th></tr>
+<tr><td>X (în FND)</td><td>≡</td><td>X ∧ (Y ∨ ¬Y)</td><td class="mut">apoi distribui ∧ peste ∨</td></tr>
+<tr><td>X (în FNC)</td><td>≡</td><td>X ∨ (Y ∧ ¬Y)</td><td class="mut">apoi distribui ∨ peste ∧</td></tr>
+</table></div>
 </div>
 
 <div class="card">
