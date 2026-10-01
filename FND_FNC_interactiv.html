@@ -28,6 +28,7 @@ th{background:var(--bg)}.t1{color:var(--ok);font-weight:700}.t0{color:var(--no)}
 .res{font-size:1.2rem;font-weight:700;padding:10px;border-radius:10px;margin-top:8px}
 .res.y{background:rgba(22,163,74,.15);color:var(--ok)}.res.n{background:rgba(220,38,38,.15);color:var(--no)}
 .err{color:var(--no)}
+.n{display:inline-block;border-top:.1em solid currentColor;line-height:1.1;padding-top:.12em;margin-inline:.04em;white-space:nowrap}
 select{padding:9px;border-radius:9px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit;max-width:100%}
 </style>
 </head>
@@ -38,6 +39,7 @@ select{padding:9px;border-radius:9px;border:1px solid var(--bd);background:var(-
 
 <div class="card">
 <h2>1. Ideea pe scurt</h2>
+<p><b>Cum se scrie „non”:</b> cu o bară deasupra, ca în carte. <span class="n">A</span> se citește „non A” (A este fals). Bara poate acoperi și un grup: <span class="n">A∧B</span> înseamnă „non (A și B)”. Bara dublă anulează: <span class="n"><span class="n">A</span></span> = A.</p>
 <p><b>FND</b> = un <b>SAU</b> de grupuri legate cu <b>ȘI</b>.<br>
 Exemplu din viață: „Merg la film dacă <i>(am bani ȘI am timp)</i> SAU <i>(mă invită cineva)</i>”.</p>
 <p><b>FNC</b> = un <b>ȘI</b> de grupuri legate cu <b>SAU</b>.<br>
@@ -68,7 +70,7 @@ Exemplu: „Pot intra în club dacă <i>(am bilet SAU sunt invitat)</i> ȘI <i>(
 
 <div class="card">
 <h2>4. Calculatorul tău</h2>
-<p class="mut">Scrie orice formulă cu variabile A–E. Simboluri: <code>!</code> sau <code>¬</code> = non, <code>&amp;</code> sau <code>∧</code> = și, <code>|</code> sau <code>∨</code> = sau, <code>-&gt;</code> sau <code>→</code> = implică, <code>&lt;-&gt;</code> sau <code>↔</code> = echivalent.</p>
+<p class="mut">Scrie orice formulă cu variabile A–E. Simboluri: <code>!</code> = non (pus ca bară deasupra în rezultat), <code>&amp;</code> sau <code>∧</code> = și, <code>|</code> sau <code>∨</code> = sau, <code>-&gt;</code> sau <code>→</code> = implică, <code>&lt;-&gt;</code> sau <code>↔</code> = echivalent.</p>
 <input type="text" id="inp" value="(A&B)->B" spellcheck="false">
 <div>
 <button class="sec" data-f="(A&B)->B">(A∧B)→B</button>
@@ -77,6 +79,7 @@ Exemplu: „Pot intra în club dacă <i>(am bilet SAU sunt invitat)</i> ȘI <i>(
 <button class="sec" data-f="(A->B)&(B->A)">(A→B)∧(B→A)</button>
 <button class="sec" data-f="!(A&B)->(A|C)">¬(A∧B)→(A∨C)</button>
 </div>
+<div id="pretty" class="f"></div>
 <div id="calc"></div>
 </div>
 
@@ -92,6 +95,21 @@ Exemplu: „Pot intra în club dacă <i>(am bilet SAU sunt invitat)</i> ȘI <i>(
 </main>
 
 <script>
+// ---------- Negația cu bară deasupra (ca în carte) ----------
+function barHtml(s){
+ const esc=t=>t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ function operand(str,i){ // returnează [html, indexNou] sau null
+  const c=str[i];
+  if(c==='¬'){const r=operand(str,i+1);return r?['<span class="n">'+r[0]+'</span>',r[1]]:null;}
+  if(c==='('){let d=0;for(let j=i;j<str.length;j++){if(str[j]==='(')d++;else if(str[j]===')'&&--d===0)return[conv(str.slice(i+1,j)),j+1];}return null;}
+  if(c&&/[A-E]/.test(c))return[c,i+1];
+  return null;}
+ function conv(str){let o='',i=0;while(i<str.length){if(str[i]==='¬'){const r=operand(str,i+1);if(r){o+='<span class="n">'+r[0]+'</span>';i=r[1];continue;}}o+=esc(str[i]);i++;}return o;}
+ return conv(s);}
+function bar(root){
+ const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),list=[];
+ for(let n;n=w.nextNode();){if(n.nodeValue.includes('¬')&&!/^(INPUT|SCRIPT|STYLE|TEXTAREA|OPTION|TITLE)$/.test(n.parentNode.nodeName))list.push(n);}
+ list.forEach(n=>{const h=barHtml(n.nodeValue);if(h.includes('class="n"')){const t=document.createElement('template');t.innerHTML=h;n.replaceWith(t.content);}});}
 // ---------- 2. Exemple pas cu pas ----------
 const EXS=[
 {n:"Dacă plouă și am umbrelă, atunci am umbrelă  (A=plouă, B=am umbrelă)",
@@ -129,7 +147,7 @@ const ex=document.getElementById('ex'),steps=document.getElementById('steps'),nb
 let k=0;
 EXS.forEach((e,i)=>ex.add(new Option(e.n,i)));
 function renderEx(){const e=EXS[+ex.value];document.getElementById('exText').textContent=e.t;steps.innerHTML='';k=0;nb.disabled=false;showNext();}
-function showNext(){const e=EXS[+ex.value];if(k<e.s.length){const d=document.createElement('div');d.className='step';d.innerHTML=e.s[k++];steps.appendChild(d);}nb.disabled=k>=e.s.length;}
+function showNext(){const e=EXS[+ex.value];if(k<e.s.length){const d=document.createElement('div');d.className='step';d.innerHTML=e.s[k++];bar(d);steps.appendChild(d);}nb.disabled=k>=e.s.length;}
 nb.onclick=showNext;document.getElementById('reset').onclick=renderEx;ex.onchange=renderEx;renderEx();
 
 // ---------- 3. Scenarii ----------
@@ -146,7 +164,7 @@ SC.forEach((e,i)=>sc.add(new Option(e.n,i)));
 function renderSc(){const e=SC[+sc.value];sw.innerHTML='';
  e.v.forEach((name,i)=>{const l=document.createElement('label');l.innerHTML=`<input type="checkbox" data-i="${i}"> ${name}`;l.firstChild.onchange=upd;sw.appendChild(l);});upd();}
 function upd(){const e=SC[+sc.value];const vals=[...sw.querySelectorAll('input')].map(x=>x.checked);
- const r=e.f(...vals);scRes.innerHTML=`<div class="res ${r?'y':'n'}">${r?'Adevărat (1)':'Fals (0)'}</div><p>${e.say(...vals,r)}</p>`;}
+ const r=e.f(...vals);scRes.innerHTML=`<div class="res ${r?'y':'n'}">${r?'Adevărat (1)':'Fals (0)'}</div><p>${e.say(...vals,r)}</p>`;bar(scRes);}
 sc.onchange=renderSc;renderSc();
 
 // ---------- 4. Calculator ----------
@@ -164,7 +182,8 @@ function parse(tk){let p=0;const peek=()=>tk[p]&&tk[p][0],eat=()=>tk[p++];
   if(t[0]==='('){const x=eqv();if(peek()!==')')throw new Error("Lipsește )");eat();return x;}
   throw new Error("Simbol neașteptat");}
  const f=eqv();if(p<tk.length)throw new Error("Simboluri în plus");return f;}
-function calc(){const box=document.getElementById('calc');
+function calc(){const box=document.getElementById('calc'),pr=document.getElementById('pretty');
+ pr.textContent=document.getElementById('inp').value.replace(/<->|<=>/g,'↔').replace(/->|=>/g,'→').replace(/[!~]/g,'¬').replace(/&/g,'∧').replace(/\|/g,'∨');bar(pr);
  try{const tk=tokenize(document.getElementById('inp').value);
   const vars=[...new Set(tk.filter(t=>t[0]==='v').map(t=>t[1]))].sort();
   if(!vars.length&&!tk.length)throw new Error("Scrie o formulă");
@@ -181,11 +200,11 @@ function calc(){const box=document.getElementById('calc');
   h+=`<p>${verdict}</p>`;
   h+=`<p><b>FDNP</b> (rândurile cu 1):</p><span class="f">${ones.length?fdnp:'0'}</span>`;
   h+=`<p><b>FCNP</b> (rândurile cu 0):</p><span class="f">${zeros.length?fcnp:'1'}</span>`;
-  box.innerHTML=h;
+  box.innerHTML=h;bar(box);
  }catch(err){box.innerHTML=`<p class="err">${err.message}</p>`;}}
 document.getElementById('inp').oninput=calc;
 document.querySelectorAll('button[data-f]').forEach(b=>b.onclick=()=>{document.getElementById('inp').value=b.dataset.f;calc();});
-calc();
+calc();bar(document.querySelector('main'));
 </script>
 </body>
 </html>
