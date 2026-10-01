@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FND și FNC interactiv</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--tx:#1d2433;--mut:#667085;--ac:#4f46e5;--ok:#16a34a;--no:#dc2626;--bd:#e4e7ee}
+@media (prefers-color-scheme:dark){:root{--bg:#10131a;--card:#181c26;--tx:#e8ebf2;--mut:#98a2b3;--ac:#8b86ff;--ok:#4ade80;--no:#f87171;--bd:#2a3040}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,sans-serif}
+main{max-width:860px;margin:auto;padding:16px}
+h1{font-size:1.7rem;margin:.6em 0 .2em}h2{margin-top:0}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:18px;margin:16px 0}
+.mut{color:var(--mut)}
+code,.f{font-family:ui-monospace,Menlo,monospace;background:var(--bg);padding:2px 6px;border-radius:6px}
+.f{display:block;padding:10px 12px;margin:8px 0;font-size:1.05rem;overflow-x:auto}
+button{background:var(--ac);color:#fff;border:0;border-radius:9px;padding:9px 14px;font:inherit;cursor:pointer;margin:3px 3px 3px 0}
+button.sec{background:var(--bg);color:var(--tx);border:1px solid var(--bd)}
+button:disabled{opacity:.4;cursor:default}
+input[type=text]{width:100%;padding:10px;border-radius:9px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:1.1rem ui-monospace,monospace}
+table{border-collapse:collapse;margin:10px 0}td,th{border:1px solid var(--bd);padding:5px 12px;text-align:center}
+th{background:var(--bg)}.t1{color:var(--ok);font-weight:700}.t0{color:var(--no)}
+.step{border-left:4px solid var(--ac);padding:6px 12px;margin:8px 0;animation:in .3s}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+.sw{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.sw label{display:flex;gap:8px;align-items:center;background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:8px 12px;cursor:pointer}
+.res{font-size:1.2rem;font-weight:700;padding:10px;border-radius:10px;margin-top:8px}
+.res.y{background:rgba(22,163,74,.15);color:var(--ok)}.res.n{background:rgba(220,38,38,.15);color:var(--no)}
+.err{color:var(--no)}
+select{padding:9px;border-radius:9px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit;max-width:100%}
+</style>
+</head>
+<body>
+<main>
+<h1>FND și FNC, pe înțelesul tuturor</h1>
+<p class="mut">Logică matematică: cum aduci o formulă la forma normală disjunctivă (FND) sau conjunctivă (FNC).</p>
+
+<div class="card">
+<h2>1. Ideea pe scurt</h2>
+<p><b>FND</b> = un <b>SAU</b> de grupuri legate cu <b>ȘI</b>.<br>
+Exemplu din viață: „Merg la film dacă <i>(am bani ȘI am timp)</i> SAU <i>(mă invită cineva)</i>”.</p>
+<p><b>FNC</b> = un <b>ȘI</b> de grupuri legate cu <b>SAU</b>.<br>
+Exemplu: „Pot intra în club dacă <i>(am bilet SAU sunt invitat)</i> ȘI <i>(am buletin SAU permis)</i>”.</p>
+<p><b>Cei 4 pași</b> (mereu aceiași):</p>
+<ol>
+<li>Elimini <code>→</code> și <code>↔</code>: <code>X→Y ≡ ¬X∨Y</code></li>
+<li>Muți negațiile la variabile (De Morgan): <code>¬(X∧Y) ≡ ¬X∨¬Y</code>, <code>¬(X∨Y) ≡ ¬X∧¬Y</code></li>
+<li>Distribui: pentru FND <code>X∧(Y∨Z) ≡ (X∧Y)∨(X∧Z)</code>; pentru FNC <code>X∨(Y∧Z) ≡ (X∨Y)∧(X∨Z)</code></li>
+<li>Simplifici: <code>A∨¬A≡1</code>, <code>A∧¬A≡0</code>, <code>X∨1≡1</code>, <code>X∧1≡X</code>, <code>X∨0≡X</code>, <code>X∧0≡0</code></li>
+</ol>
+</div>
+
+<div class="card">
+<h2>2. Pas cu pas, cu exemple din viață</h2>
+<select id="ex"></select>
+<p id="exText"></p>
+<div id="steps"></div>
+<button id="next">Următorul pas ▶</button><button class="sec" id="reset">Reia</button>
+</div>
+
+<div class="card">
+<h2>3. Joacă-te: comută și vezi rezultatul</h2>
+<select id="sc"></select>
+<div class="sw" id="sw"></div>
+<div id="scRes"></div>
+</div>
+
+<div class="card">
+<h2>4. Calculatorul tău</h2>
+<p class="mut">Scrie orice formulă cu variabile A–E. Simboluri: <code>!</code> sau <code>¬</code> = non, <code>&amp;</code> sau <code>∧</code> = și, <code>|</code> sau <code>∨</code> = sau, <code>-&gt;</code> sau <code>→</code> = implică, <code>&lt;-&gt;</code> sau <code>↔</code> = echivalent.</p>
+<input type="text" id="inp" value="(A&B)->B" spellcheck="false">
+<div>
+<button class="sec" data-f="(A&B)->B">(A∧B)→B</button>
+<button class="sec" data-f="(A|B)->B">(A∨B)→B</button>
+<button class="sec" data-f="(A->B)->C">(A→B)→C</button>
+<button class="sec" data-f="(A->B)&(B->A)">(A→B)∧(B→A)</button>
+<button class="sec" data-f="!(A&B)->(A|C)">¬(A∧B)→(A∨C)</button>
+</div>
+<div id="calc"></div>
+</div>
+
+<div class="card">
+<h2>Atenție la capcane</h2>
+<ul>
+<li>FND/FNC <b>simplă</b> se obține algebric (pașii de mai sus). FDNP/FCNP <b>perfectă</b> = fiecare termen conține <b>toate</b> variabilele (se citește direct din tabel).</li>
+<li>FDNP: rândurile cu <b>1</b>, literalii legați cu ∧, variabila 0 → negată.</li>
+<li>FCNP: rândurile cu <b>0</b>, literalii legați cu ∨, variabila 1 → negată.</li>
+<li>Dacă toate rândurile sunt 1, formula e tautologie (≡1). Dacă toate sunt 0, e contradicție (≡0).</li>
+</ul>
+</div>
+</main>
+
+<script>
+// ---------- 2. Exemple pas cu pas ----------
+const EXS=[
+{n:"Dacă plouă și am umbrelă, atunci am umbrelă  (A=plouă, B=am umbrelă)",
+ t:"(A∧B)→B — o propoziție evident adevărată. Vedem de ce.",
+ s:["Formula: <span class='f'>(A∧B) → B</span>",
+    "Pas 1, elimini implicația: <span class='f'>¬(A∧B) ∨ B</span>",
+    "Pas 2, De Morgan: <span class='f'>(¬A ∨ ¬B) ∨ B</span>",
+    "Pas 3, regrupezi: <span class='f'>¬A ∨ (¬B ∨ B)</span>",
+    "Pas 4, <code>¬B∨B ≡ 1</code>: <span class='f'>¬A ∨ 1 ≡ 1</span>",
+    "<b>Concluzie:</b> e tautologie (mereu adevărată), deci FND = FNC = 1."]},
+{n:"Dacă plouă sau e frig, iau geacă  (A=plouă, B=e frig, C=iau geacă)",
+ t:"(A∨B)→C. Vrem FNC și FND.",
+ s:["Formula: <span class='f'>(A∨B) → C</span>",
+    "Pas 1: <span class='f'>¬(A∨B) ∨ C</span>",
+    "Pas 2, De Morgan: <span class='f'>(¬A ∧ ¬B) ∨ C</span> ← aceasta e deja <b>FND</b>",
+    "Pas 3, distribui ∨ peste ∧: <span class='f'>(¬A ∨ C) ∧ (¬B ∨ C)</span>",
+    "<b>FNC</b> = <code>(¬A∨C)∧(¬B∨C)</code>. Citit: „dacă plouă, iau geacă” ȘI „dacă e frig, iau geacă”."]},
+{n:"Dacă promit lucru Y, atunci Y, ȘI invers  (A↔B)",
+ t:"Echivalența: „merg la mare dacă și numai dacă e soare”.",
+ s:["Formula: <span class='f'>A ↔ B</span>",
+    "Pas 1: <span class='f'>(A→B) ∧ (B→A)</span>",
+    "Pas 1 bis: <span class='f'>(¬A∨B) ∧ (¬B∨A)</span> ← aceasta e <b>FNC</b>",
+    "Pas 3, distribui pentru FND: <span class='f'>(¬A∧¬B) ∨ (¬A∧A) ∨ (B∧¬B) ∨ (B∧A)</span>",
+    "Pas 4, <code>¬A∧A≡0</code>, <code>B∧¬B≡0</code>: <span class='f'>(¬A∧¬B) ∨ (A∧B)</span> ← <b>FND</b>",
+    "Citit: „ori nu e nici soare nici mare, ori e și soare și mare”."]},
+{n:"Dacă (A→B) atunci C  (A=învăț, B=iau 10, C=sărbătoresc)",
+ t:"(A→B)→C — exemplu cu implicație în implicație.",
+ s:["Formula: <span class='f'>(A → B) → C</span>",
+    "Pas 1, interior: <span class='f'>(¬A ∨ B) → C</span>",
+    "Pas 1, exterior: <span class='f'>¬(¬A ∨ B) ∨ C</span>",
+    "Pas 2, De Morgan: <span class='f'>(A ∧ ¬B) ∨ C</span> ← <b>FND</b>",
+    "Pas 3 pentru FNC: <span class='f'>(A∨C) ∧ (¬B∨C)</span> ← <b>FNC</b>"]}
+];
+const ex=document.getElementById('ex'),steps=document.getElementById('steps'),nb=document.getElementById('next');
+let k=0;
+EXS.forEach((e,i)=>ex.add(new Option(e.n,i)));
+function renderEx(){const e=EXS[+ex.value];document.getElementById('exText').textContent=e.t;steps.innerHTML='';k=0;nb.disabled=false;showNext();}
+function showNext(){const e=EXS[+ex.value];if(k<e.s.length){const d=document.createElement('div');d.className='step';d.innerHTML=e.s[k++];steps.appendChild(d);}nb.disabled=k>=e.s.length;}
+nb.onclick=showNext;document.getElementById('reset').onclick=renderEx;ex.onchange=renderEx;renderEx();
+
+// ---------- 3. Scenarii ----------
+const SC=[
+{n:"(A∨B)→C  Dacă plouă sau e frig, iau geacă",v:["Plouă","E frig","Iau geacă"],f:(a,b,c)=>!(a||b)||c,
+ say:(a,b,c,r)=>`Plouă: ${a?'da':'nu'}, e frig: ${b?'da':'nu'}, iau geacă: ${c?'da':'nu'}. Promisiunea ${r?'e respectată':'e încălcată'}.`},
+{n:"(A∧B)→C  Dacă am bani și timp, merg la film",v:["Am bani","Am timp","Merg la film"],f:(a,b,c)=>!(a&&b)||c,
+ say:(a,b,c,r)=>`Bani: ${a?'da':'nu'}, timp: ${b?'da':'nu'}, film: ${c?'da':'nu'}. Promisiunea ${r?'e respectată':'e încălcată'}.`},
+{n:"A↔B  Merg la mare dacă și numai dacă e soare",v:["E soare","Merg la mare"],f:(a,b)=>a===b,
+ say:(a,b,r)=>`Soare: ${a?'da':'nu'}, mare: ${b?'da':'nu'}. ${r?'Se potrivesc':'Nu se potrivesc'}.`}
+];
+const sc=document.getElementById('sc'),sw=document.getElementById('sw'),scRes=document.getElementById('scRes');
+SC.forEach((e,i)=>sc.add(new Option(e.n,i)));
+function renderSc(){const e=SC[+sc.value];sw.innerHTML='';
+ e.v.forEach((name,i)=>{const l=document.createElement('label');l.innerHTML=`<input type="checkbox" data-i="${i}"> ${name}`;l.firstChild.onchange=upd;sw.appendChild(l);});upd();}
+function upd(){const e=SC[+sc.value];const vals=[...sw.querySelectorAll('input')].map(x=>x.checked);
+ const r=e.f(...vals);scRes.innerHTML=`<div class="res ${r?'y':'n'}">${r?'Adevărat (1)':'Fals (0)'}</div><p>${e.say(...vals,r)}</p>`;}
+sc.onchange=renderSc;renderSc();
+
+// ---------- 4. Calculator ----------
+function tokenize(s){
+ s=s.replace(/<->|<=>|↔/g,'#').replace(/->|=>|→/g,'>').replace(/[!~¬]/g,'!').replace(/[&∧]/g,'&').replace(/[|∨]/g,'|').replace(/\s+/g,'');
+ const out=[];for(const ch of s){if(/[A-E]/i.test(ch))out.push(['v',ch.toUpperCase()]);else if('!&|>#()01'.includes(ch))out.push([ch]);else throw new Error("Caracter necunoscut: "+ch);}return out;}
+function parse(tk){let p=0;const peek=()=>tk[p]&&tk[p][0],eat=()=>tk[p++];
+ function eqv(){let l=imp();while(peek()==='#'){eat();const r=imp();const a=l;l=e=>a(e)===r(e);}return l;}
+ function imp(){const l=or();if(peek()==='>'){eat();const r=imp();return e=>!l(e)||r(e);}return l;}
+ function or(){let l=and();while(peek()==='|'){eat();const r=and();const a=l;l=e=>a(e)||r(e);}return l;}
+ function and(){let l=not();while(peek()==='&'){eat();const r=not();const a=l;l=e=>a(e)&&r(e);}return l;}
+ function not(){if(peek()==='!'){eat();const x=not();return e=>!x(e);}return atom();}
+ function atom(){const t=eat();if(!t)throw new Error("Formulă incompletă");
+  if(t[0]==='v')return e=>e[t[1]];if(t[0]==='0')return()=>false;if(t[0]==='1')return()=>true;
+  if(t[0]==='('){const x=eqv();if(peek()!==')')throw new Error("Lipsește )");eat();return x;}
+  throw new Error("Simbol neașteptat");}
+ const f=eqv();if(p<tk.length)throw new Error("Simboluri în plus");return f;}
+function calc(){const box=document.getElementById('calc');
+ try{const tk=tokenize(document.getElementById('inp').value);
+  const vars=[...new Set(tk.filter(t=>t[0]==='v').map(t=>t[1]))].sort();
+  if(!vars.length&&!tk.length)throw new Error("Scrie o formulă");
+  const f=parse(tk);const n=vars.length,rows=[];
+  for(let i=0;i<(1<<n);i++){const e={};vars.forEach((v,j)=>e[v]=!!((i>>(n-1-j))&1));rows.push([e,f(e)]);}
+  const ones=rows.filter(r=>r[1]),zeros=rows.filter(r=>!r[1]);
+  const lit=(v,pos)=>pos?v:'¬'+v;
+  const fdnp=ones.map(([e])=>'('+vars.map(v=>lit(v,e[v])).join(' ∧ ')+')').join(' ∨ ');
+  const fcnp=zeros.map(([e])=>'('+vars.map(v=>lit(v,!e[v])).join(' ∨ ')+')').join(' ∧ ');
+  let h='<table><tr>'+vars.map(v=>`<th>${v}</th>`).join('')+'<th>f</th></tr>';
+  rows.forEach(([e,r])=>{h+='<tr>'+vars.map(v=>`<td>${+e[v]}</td>`).join('')+`<td class="${r?'t1':'t0'}">${+r}</td></tr>`;});
+  h+='</table>';
+  let verdict=!zeros.length?'<b>Tautologie</b> (mereu 1): FDNP are toate rândurile, FCNP ≡ 1.':!ones.length?'<b>Contradicție</b> (mereu 0): FDNP ≡ 0.':'Formulă realizabilă, nu tautologie.';
+  h+=`<p>${verdict}</p>`;
+  h+=`<p><b>FDNP</b> (rândurile cu 1):</p><span class="f">${ones.length?fdnp:'0'}</span>`;
+  h+=`<p><b>FCNP</b> (rândurile cu 0):</p><span class="f">${zeros.length?fcnp:'1'}</span>`;
+  box.innerHTML=h;
+ }catch(err){box.innerHTML=`<p class="err">${err.message}</p>`;}}
+document.getElementById('inp').oninput=calc;
+document.querySelectorAll('button[data-f]').forEach(b=>b.onclick=()=>{document.getElementById('inp').value=b.dataset.f;calc();});
+calc();
+</script>
+</body>
+</html>
