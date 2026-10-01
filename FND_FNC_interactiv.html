@@ -102,7 +102,7 @@ function barHtml(s){
   const c=str[i];
   if(c==='¬'){const r=operand(str,i+1);return r?['<span class="n">'+r[0]+'</span>',r[1]]:null;}
   if(c==='('){let d=0;for(let j=i;j<str.length;j++){if(str[j]==='(')d++;else if(str[j]===')'&&--d===0)return[conv(str.slice(i+1,j)),j+1];}return null;}
-  if(c&&/[A-E]/.test(c))return[c,i+1];
+  if(c&&/[A-EX-Z]/.test(c))return[c,i+1];
   return null;}
  function conv(str){let o='',i=0;while(i<str.length){if(str[i]==='¬'){const r=operand(str,i+1);if(r){o+='<span class="n">'+r[0]+'</span>';i=r[1];continue;}}o+=esc(str[i]);i++;}return o;}
  return conv(s);}
