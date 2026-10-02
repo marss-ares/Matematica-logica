@@ -36,7 +36,7 @@ input[type=text]{width:100%;padding:10px;border-radius:9px;border:1px solid var(
 .fb{margin:4px 0;font-weight:600}.fb.ok{color:var(--ok)}.fb.bad{color:var(--no)}
 .hint{border-left:4px solid var(--wa);padding:4px 12px;margin:8px 0}
 .sol{border-left:4px solid var(--ac);padding:4px 12px;margin:8px 0}
-.sl{margin:4px 0;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}.sl b{min-width:5.2em;font-size:.9rem}.sl .f{margin:0;flex:1 1 200px;min-height:0}
+.cp{font-size:.8rem;padding:2px 8px;cursor:pointer}.sl .f{user-select:text}.sl{margin:4px 0;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}.sl b{min-width:5.2em;font-size:.9rem}.sl .f{margin:0;flex:1 1 200px;min-height:0}
 .bd{display:inline-block;font-size:.85rem;padding:2px 9px;border-radius:99px;border:1px solid var(--bd);margin:2px 4px 2px 0}.bd.y{color:var(--ok);border-color:var(--ok)}.bd.n{color:var(--mut)}
 .note{color:var(--mut);font-size:.92rem;margin:4px 0}
 .kb{position:sticky;bottom:env(safe-area-inset-bottom,0px);background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:8px;display:flex;flex-wrap:wrap;gap:4px;justify-content:center}
@@ -70,6 +70,9 @@ function barHtml(s){
   return null;}
  function conv(str){let o='',i=0;while(i<str.length){if(str[i]==='¬'){const r=operand(str,i+1);if(r){o+='<span class="n">'+r[0]+'</span>';i=r[1];continue;}}o+=esc(str[i]);i++;}return o;}
  return conv(s);}
+function copyTxt(t,b){const ok=()=>{b.textContent='Copiat ✓';setTimeout(()=>b.textContent='Copiază',1500);};
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,()=>fb());}else fb();
+ function fb(){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');ok();}catch(e){}a.remove();}}
 function bar(root){
  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),list=[];
  for(let n;n=w.nextNode();){if(n.nodeValue.includes('¬')&&!/^(INPUT|SCRIPT|STYLE|TEXTAREA|OPTION|TITLE)$/.test(n.parentNode.nodeName))list.push(n);}
@@ -195,7 +198,7 @@ qs.addEventListener('click',e=>{
   if(d){fb.className='fb bad';fb.textContent='Aici te-ai pierdut: pasul nu e echivalent cu cel dinainte. La '+d.at+' pasul tău dă '+(+d.x)+', iar formula dinainte dă '+(+d.y)+'. Verifică regula folosită și încearcă din nou.';nt.textContent='';return;}
   if(ser(n)===ser(prev)){fb.className='fb bad';fb.textContent='E aceeași formulă ca la pasul dinainte. Aplică o transformare.';nt.textContent='';return;}
   hist.push(inp.value);
-  const row=document.createElement('div');row.className='sl';row.innerHTML='<b>Pasul '+(hist.length-1)+' ✓</b><span class="f"></span>';row.lastChild.textContent=pretty(inp.value);bar(row);document.getElementById('sl'+id).appendChild(row);
+  const row=document.createElement('div');row.className='sl';row.innerHTML='<b>Pasul '+(hist.length-1)+' ✓</b><span class="f"></span>';row.lastChild.textContent=pretty(inp.value);row.dataset.txt=pretty(inp.value);bar(row);const cb=document.createElement('button');cb.type='button';cb.className='cp';cb.textContent='Copiază';cb.onclick=()=>copyTxt(row.dataset.txt,cb);row.appendChild(cb);document.getElementById('sl'+id).appendChild(row);
   inp.value='';document.getElementById('pv'+id).textContent='';
   document.getElementById('bd'+id).innerHTML=badges(n);
   const r=formCheck(q.parts[pi],n,vars(parse(q.f)));fb.className='fb '+(r.ok?'ok':'bad');fb.textContent=r.ok?r.msg:'Pas valid. '+r.msg;
