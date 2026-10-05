@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test 2 FND și FNC</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--tx:#1d2433;--mut:#667085;--ac:#4f46e5;--ok:#16a34a;--no:#dc2626;--wa:#b45309;--bd:#e4e7ee}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10131a;--card:#181c26;--tx:#e8ebf2;--mut:#98a2b3;--ac:#8b86ff;--ok:#4ade80;--no:#f87171;--wa:#fbbf24;--bd:#2a3040;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10131a;--card:#181c26;--tx:#e8ebf2;--mut:#98a2b3;--ac:#8b86ff;--ok:#4ade80;--no:#f87171;--wa:#fbbf24;--bd:#2a3040;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,sans-serif}
+main{max-width:820px;margin:auto;padding-inline:16px;padding-block:16px 24px}
+h1{font-size:1.6rem;margin:.5em 0 .2em}h2{margin:0 0 .3em;font-size:1.15rem}
+.mut{color:var(--mut)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin:14px 0}
+.f{display:block;font-family:ui-monospace,Menlo,monospace;background:var(--bg);padding:10px 12px;margin:8px 0;border-radius:8px;overflow-x:auto;font-size:1.05rem;min-height:2.6em}
+button{background:var(--ac);color:var(--card);border:0;border-radius:9px;padding:9px 14px;font:inherit;cursor:pointer;margin:3px 3px 3px 0}
+button.sec{background:var(--bg);color:var(--tx);border:1px solid var(--bd)}
+button:disabled{opacity:.4;cursor:default}
+button:focus-visible,input:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+input[type=text]{width:100%;padding:10px;border-radius:9px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:1.05rem ui-monospace,monospace}
+.n{display:inline-block;border-top:.1em solid currentColor;line-height:1.1;padding-top:.12em;margin-inline:.04em;white-space:nowrap}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px 16px;margin-top:8px}
+.bar{height:8px;background:var(--bg);border-radius:6px;overflow:hidden;margin-top:6px}
+.bar>i{display:block;height:100%;background:var(--ok);width:0;transition:width .3s}
+.qh{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
+.lv{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
+.st{font-weight:700;font-size:.9rem}.st.ok{color:var(--ok)}.st.wa{color:var(--wa)}
+.life{margin:.2em 0;font-style:italic;color:var(--mut)}
+.part{margin:10px 0}
+.part label{font-weight:600;display:block;margin-bottom:4px}
+.row{display:flex;gap:6px;align-items:stretch;flex-wrap:wrap}
+.row input{flex:1 1 220px;min-width:0}
+.pv{min-height:2.2em;margin:4px 0}
+.fb{margin:4px 0;font-weight:600}.fb.ok{color:var(--ok)}.fb.bad{color:var(--no)}
+.hint{border-left:4px solid var(--wa);padding:4px 12px;margin:8px 0}
+.sol{border-left:4px solid var(--ac);padding:4px 12px;margin:8px 0}
+.cp{font-size:.8rem;padding:2px 8px;cursor:pointer}.sl .f{user-select:text}.sl{margin:4px 0;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}.sl b{min-width:5.2em;font-size:.9rem}.sl .f{margin:0;flex:1 1 200px;min-height:0}
+.bd{display:inline-block;font-size:.85rem;padding:2px 9px;border-radius:99px;border:1px solid var(--bd);margin:2px 4px 2px 0}.bd.y{color:var(--ok);border-color:var(--ok)}.bd.n{color:var(--mut)}
+.note{color:var(--mut);font-size:.92rem;margin:4px 0}
+.kb{position:sticky;bottom:env(safe-area-inset-bottom,0px);background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:8px;display:flex;flex-wrap:wrap;gap:4px;justify-content:center}
+.kb button{margin:0;min-width:2.6em;padding:9px 10px;font-size:1.05rem}
+</style>
+
+</head>
+<body>
+<main>
+<h1>Test 2 FND și FNC</h1>
+<p class="mut">14 exerciții de la ușor la greu. Scrii <b>un pas pe rând</b>. Pagina verifică dacă pasul e echivalent cu cel dinainte; dacă nu, îți arată unde te-ai pierdut și nu îl adaugă. Sub formulă vezi ce îndeplinește deja (fără →, negații pe variabile, FND, FNC). Poți și sări direct la răspuns. Indiciile și rezolvarea sunt opționale.</p>
+<p class="mut">Scrii cu butoanele de jos sau de la tastatură: <code>!</code> = non, <code>&amp;</code> = și, <code>|</code> = sau, <code>-&gt;</code> = implică, <code>&lt;-&gt;</code> = echivalent. Sub câmp vezi formula ta cu bară deasupra, ca în carte.</p>
+
+<div class="top"><b id="score">Rezolvate 0 din 14</b> <span class="mut" id="clean">· fără indicii: 0</span><div class="bar"><i id="prog"></i></div></div>
+<div id="qs"></div>
+<div class="card" id="done" hidden><h2>Terminat</h2><p id="doneTx"></p></div>
+</main>
+<div class="kb" id="kb" role="group" aria-label="Simboluri">
+<button class="sec" data-i="¬" aria-label="non">¬</button><button class="sec" data-i="∧">∧</button><button class="sec" data-i="∨">∨</button><button class="sec" data-i="→">→</button><button class="sec" data-i="↔">↔</button><button class="sec" data-i="(">(</button><button class="sec" data-i=")">)</button><button class="sec" data-i="A">A</button><button class="sec" data-i="B">B</button><button class="sec" data-i="C">C</button><button class="sec" data-i="1">1</button><button class="sec" data-i="0">0</button><button class="sec" data-i="⌫" aria-label="șterge">⌫</button>
+</div>
+
+<script>
+// ---------- Negația cu bară deasupra ----------
+function barHtml(s){
+ const esc=t=>t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ function operand(str,i){
+  const c=str[i];
+  if(c==='¬'){const r=operand(str,i+1);return r?['<span class="n">'+r[0]+'</span>',r[1]]:null;}
+  if(c==='('){let d=0;for(let j=i;j<str.length;j++){if(str[j]==='(')d++;else if(str[j]===')'&&--d===0)return[conv(str.slice(i+1,j)),j+1];}return null;}
+  if(c&&/[A-EX-Z]/.test(c))return[c,i+1];
+  return null;}
+ function conv(str){let o='',i=0;while(i<str.length){if(str[i]==='¬'){const r=operand(str,i+1);if(r){o+='<span class="n">'+r[0]+'</span>';i=r[1];continue;}}o+=esc(str[i]);i++;}return o;}
+ return conv(s);}
+function copyTxt(t,b){const ok=()=>{b.textContent='Copiat ✓';setTimeout(()=>b.textContent='Copiază',1500);};
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,()=>fb());}else fb();
+ function fb(){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');ok();}catch(e){}a.remove();}}
+function bar(root){
+ const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),list=[];
+ for(let n;n=w.nextNode();){if(n.nodeValue.includes('¬')&&!/^(INPUT|SCRIPT|STYLE|TEXTAREA|OPTION|TITLE)$/.test(n.parentNode.nodeName))list.push(n);}
+ list.forEach(n=>{const h=barHtml(n.nodeValue);if(h.includes('class="n"')){const t=document.createElement('template');t.innerHTML=h;n.replaceWith(t.content);}});}
+
+// ---------- Parser cu arbore ----------
+function norm(s){return s.replace(/<->|<=>|↔/g,'#').replace(/->|=>|→/g,'>').replace(/[!~¬]/g,'!').replace(/[&∧^]/g,'&').replace(/[|∨]/g,'|').replace(/\s+/g,'');}
+function parse(src){
+ const tk=[];for(const ch of norm(src)){if(/[A-Ea-e]/.test(ch))tk.push(['v',ch.toUpperCase()]);else if('!&|>#()01'.includes(ch))tk.push([ch]);else throw new Error('Caracter necunoscut: '+ch);}
+ if(!tk.length)throw new Error('Câmpul e gol');
+ let p=0;const peek=()=>tk[p]&&tk[p][0],eat=()=>tk[p++];
+ function eqv(){let l=imp();while(peek()==='#'){eat();l={t:'eqv',a:l,b:imp()};}return l;}
+ function imp(){const l=or();if(peek()==='>'){eat();return{t:'imp',a:l,b:imp()};}return l;}
+ function or(){let l=and();while(peek()==='|'){eat();l={t:'or',a:l,b:and()};}return l;}
+ function and(){let l=not();while(peek()==='&'){eat();l={t:'and',a:l,b:not()};}return l;}
+ function not(){if(peek()==='!'){eat();return{t:'not',x:not()};}return atom();}
+ function atom(){const t=eat();if(!t)throw new Error('Formula e incompletă');
+  if(t[0]==='v')return{t:'v',n:t[1]};if(t[0]==='0'||t[0]==='1')return{t:'c',v:t[0]==='1'};
+  if(t[0]==='('){const x=eqv();if(peek()!==')')throw new Error('Lipsește o paranteză )');eat();return x;}
+  throw new Error('Simbol neașteptat: '+t[0]);}
+ const r=eqv();if(p<tk.length)throw new Error('Simboluri în plus la sfârșit');return r;}
+function ev(n,e){switch(n.t){case'v':return e[n.n];case'c':return n.v;case'not':return!ev(n.x,e);case'and':return ev(n.a,e)&&ev(n.b,e);case'or':return ev(n.a,e)||ev(n.b,e);case'imp':return!ev(n.a,e)||ev(n.b,e);case'eqv':return ev(n.a,e)===ev(n.b,e);}}
+function vars(n,s=new Set()){if(n.t==='v')s.add(n.n);else{for(const k of['a','b','x'])if(n[k])vars(n[k],s);}return s;}
+function nLits(n){if(n.t==='v')return 1;let c=0;for(const k of['a','b','x'])if(n[k])c+=nLits(n[k]);return c;}
+function flat(n,t){return n.t===t?flat(n.a,t).concat(flat(n.b,t)):[n];}
+const isLit=n=>n.t==='v'||n.t==='c'||(n.t==='not'&&n.x.t==='v');
+const isTerm=n=>flat(n,'and').every(isLit),isClause=n=>flat(n,'or').every(isLit);
+const isFND=n=>flat(n,'or').every(isTerm),isFNC=n=>flat(n,'and').every(isClause);
+const litVars=l=>l.t==='v'?l.n:l.t==='not'?l.x.n:null;
+function allHave(parts,qv){return parts.every(p=>{const s=new Set();flat(p,p._t).forEach(l=>{const v=litVars(l);if(v)s.add(v);});return[...qv].every(v=>s.has(v));});}
+
+// ---------- Exerciții ----------
+const Q=[
+{lv:'Nivel 1: eliminarea',life:'Dacă plouă (A), iau geacă (B) sau pelerină (C).',f:'A → (B ∨ C)',parts:[{k:'fnd',ans:'¬A ∨ B ∨ C'},{k:'fnc',ans:'¬A ∨ B ∨ C'}],
+ hints:['Elimină implicația: F → G ≡ ¬F ∨ G, cu F = A și G = (B ∨ C).','După eliminare ai ¬A ∨ (B ∨ C). Scoate parantezele. Mai ai ceva de distribuit?'],
+ sol:['Elimini implicația: <span class="f">¬A ∨ (B ∨ C)</span>','Scoți parantezele (asociativitate): <span class="f">¬A ∨ B ∨ C</span>','Nu ai niciun ∧, deci formula e și <b>FND</b> (trei termeni cu un singur literal), și <b>FNC</b> (o singură clauză).']},
+{lv:'Nivel 1: eliminarea',life:'Dacă plouă sau e frig (A, B), rămân acasă (C).',f:'(A ∨ B) → C',parts:[{k:'fnd',ans:'(¬A∧¬B)∨C'},{k:'fnc',ans:'(¬A∨C)∧(¬B∨C)'}],
+ hints:['Elimină implicația: ¬(A ∨ B) ∨ C.','De Morgan pe ¬(A ∨ B): ∨ devine ∧. Ce obții? Pentru FNC distribui ∨ peste ∧.'],
+ sol:['Elimini implicația: <span class="f">¬(A ∨ B) ∨ C</span>','De Morgan: <span class="f">(¬A ∧ ¬B) ∨ C</span> aceasta e <b>FND</b>.','Distribui ∨ peste ∧: <span class="f">(¬A ∨ C) ∧ (¬B ∨ C)</span> aceasta e <b>FNC</b>.']},
+{lv:'Nivel 1: eliminarea',life:'Dacă nu învăț (A), atunci copiez (B).',f:'¬A → B',parts:[{k:'fnd',ans:'A ∨ B'},{k:'fnc',ans:'A ∨ B'}],
+ hints:['Elimină implicația: ¬F ∨ G, cu F = ¬A.','Ai ¬¬A ∨ B. Ce faci cu dubla negație?'],
+ sol:['Elimini implicația: <span class="f">¬¬A ∨ B</span>','Dubla negație dispare: <span class="f">A ∨ B</span> aceasta e și <b>FND</b>, și <b>FNC</b>.']},
+{lv:'Nivel 1: eliminarea',life:'Merg la mare (B) dacă și numai dacă nu e soare (A).',f:'A ↔ ¬B',parts:[{k:'fnd',ans:'(A∧¬B)∨(¬A∧B)'},{k:'fnc',ans:'(¬A∨¬B)∧(A∨B)'}],
+ hints:['Desfă echivalența: A ↔ ¬B ≡ (A → ¬B) ∧ (¬B → A), apoi elimină implicațiile.','Obții (¬A ∨ ¬B) ∧ (¬¬B ∨ A), adică FNC. Pentru FND distribui, iar termenii cu F ∧ ¬F dispar.'],
+ sol:['Desfaci echivalența: <span class="f">(A → ¬B) ∧ (¬B → A)</span>','Elimini implicațiile: <span class="f">(¬A ∨ ¬B) ∧ (¬¬B ∨ A)</span>','Dubla negație: <span class="f">(¬A ∨ ¬B) ∧ (B ∨ A)</span> aceasta e <b>FNC</b>.','Distribui: <span class="f">(¬A∧B) ∨ (¬A∧A) ∨ (¬B∧B) ∨ (¬B∧A)</span>','Termenii cu F∧¬F sunt 0: <span class="f">(¬A ∧ B) ∨ (A ∧ ¬B)</span> aceasta e <b>FND</b>.']},
+{lv:'Nivel 2: De Morgan și distribuire',life:'Nu e adevărat că, dacă plouă (A), iau geacă (B) sau pelerină (C).',f:'¬(A → (B ∨ C))',parts:[{k:'fnd',ans:'A ∧ ¬B ∧ ¬C'}],
+ hints:['Elimină implicația din interior, înainte să faci ceva cu bara mare.','Ai ¬(¬A ∨ (B ∨ C)). De Morgan: ∨ devine ∧ și fiecare literal primește bară.'],
+ sol:['Elimini implicația: <span class="f">¬(¬A ∨ B ∨ C)</span>','De Morgan: <span class="f">¬¬A ∧ ¬B ∧ ¬C</span>','Dubla negație: <span class="f">A ∧ ¬B ∧ ¬C</span> aceasta e <b>FND</b> (un singur termen, și FNC).']},
+{lv:'Nivel 2: De Morgan și distribuire',life:'Dacă plouă, iau geacă. Dacă plouă, iau și umbrelă.',f:'(A → B) ∧ (A → C)',parts:[{k:'fnd',ans:'¬A ∨ (B∧C)'},{k:'fnc',ans:'(¬A∨B)∧(¬A∨C)'}],
+ hints:['Elimină ambele implicații. Obții direct o formă conjunctivă.','Pentru FND: ¬A apare în ambele clauze, deci poți scoate factor comun (distribuirea citită invers), ca la exercițiul 1 din testul anterior.'],
+ sol:['Elimini implicațiile: <span class="f">(¬A ∨ B) ∧ (¬A ∨ C)</span> aceasta e <b>FNC</b>.','Factor comun ¬A (F∨G)∧(F∨H) ≡ F∨(G∧H): <span class="f">¬A ∨ (B ∧ C)</span> aceasta e <b>FND</b>.']},
+{lv:'Nivel 2: De Morgan și distribuire',life:'Nu e adevărat că (dacă învăț, iau 10) și sărbătoresc.',f:'¬((A → B) ∧ C)',parts:[{k:'fnd',ans:'(A∧¬B)∨¬C'},{k:'fnc',ans:'(A∨¬C)∧(¬B∨¬C)'}],
+ hints:['Elimină implicația din interior: ¬((¬A ∨ B) ∧ C).','De Morgan pe bara mare: ¬X ∨ ¬C, cu X = (¬A ∨ B). Apoi încă o dată De Morgan pe ¬(¬A ∨ B).'],
+ sol:['Interior: <span class="f">¬((¬A ∨ B) ∧ C)</span>','De Morgan: <span class="f">¬(¬A ∨ B) ∨ ¬C</span>','De Morgan din nou și dubla negație: <span class="f">(A ∧ ¬B) ∨ ¬C</span> aceasta e <b>FND</b>.','Distribui ∨ peste ∧: <span class="f">(A ∨ ¬C) ∧ (¬B ∨ ¬C)</span> aceasta e <b>FNC</b>.']},
+{lv:'Nivel 2: De Morgan și distribuire',life:'Dacă măcar una din A, B e adevărată, atunci amândouă sunt.',f:'(A ∨ B) → (A ∧ B)',parts:[{k:'fnd',ans:'(¬A∧¬B)∨(A∧B)'},{k:'fnc',ans:'(¬A∨B)∧(¬B∨A)'}],
+ hints:['Elimină implicația: ¬(A ∨ B) ∨ (A ∧ B), apoi De Morgan.','Ai (¬A ∧ ¬B) ∨ (A ∧ B), adică FND. Pentru FNC distribui „fiecare cu fiecare”; termenii cu F ∨ ¬F dispar.'],
+ sol:['Elimini implicația: <span class="f">¬(A ∨ B) ∨ (A ∧ B)</span>','De Morgan: <span class="f">(¬A ∧ ¬B) ∨ (A ∧ B)</span> aceasta e <b>FND</b>.','Distribui ∨ peste ∧: <span class="f">(¬A∨A) ∧ (¬A∨B) ∧ (¬B∨A) ∧ (¬B∨B)</span>','Clauzele cu F∨¬F sunt 1: <span class="f">(¬A ∨ B) ∧ (¬B ∨ A)</span> aceasta e <b>FNC</b> (este A ↔ B).']},
+{lv:'Nivel 3: tautologii și simplificări',life:'Dacă A și B, atunci A.',f:'(A ∧ B) → A',parts:[{k:'simp',max:0,ask:'Simplifică. Rezultatul poate fi 0 sau 1.',ans:'1'}],
+ hints:['Elimină implicația și aplică De Morgan.','Ai ¬A ∨ ¬B ∨ A. Caută perechea F ∨ ¬F.'],
+ sol:['Elimini implicația: <span class="f">¬(A ∧ B) ∨ A</span>','De Morgan: <span class="f">¬A ∨ ¬B ∨ A</span>','¬A ∨ A ≡ 1, iar 1 ∨ orice ≡ 1: <span class="f">1</span> este tautologie.']},
+{lv:'Nivel 3: tautologii și simplificări',life:'A implică B, A e adevărat, dar B e fals: cât face?',f:'(A → B) ∧ A ∧ ¬B',parts:[{k:'simp',max:0,ask:'Simplifică. Rezultatul poate fi 0 sau 1.',ans:'0'}],
+ hints:['Elimină implicația: (¬A ∨ B) ∧ A ∧ ¬B.','Distribui A peste paranteză: (¬A∧A) ∨ (B∧A), apoi ∧ ¬B. Caută F ∧ ¬F.'],
+ sol:['Elimini implicația: <span class="f">(¬A ∨ B) ∧ A ∧ ¬B</span>','Distribui A: <span class="f">((¬A∧A) ∨ (B∧A)) ∧ ¬B</span>','¬A∧A ≡ 0: <span class="f">(B ∧ A) ∧ ¬B</span> apoi <span class="f">A ∧ (B ∧ ¬B) ≡ A ∧ 0 ≡ 0</span> este contradicție.']},
+{lv:'Nivel 3: tautologii și simplificări',life:'Cerut: formula scurtă, A cu B sau A fără B.',f:'(A ∧ B) ∨ (A ∧ ¬B)',parts:[{k:'simp',max:1,ask:'Simplifică cât poți (cu cel mult un literal).',ans:'A'}],
+ hints:['A apare în ambii termeni: scoate-l factor comun (distribuirea citită invers).','Ai A ∧ (B ∨ ¬B). Cât e B ∨ ¬B?'],
+ sol:['Factor comun A: <span class="f">A ∧ (B ∨ ¬B)</span>','B∨¬B ≡ 1: <span class="f">A ∧ 1 ≡ A</span>']},
+{lv:'Nivel 3: tautologii și simplificări',life:'Cerut: formula scurtă.',f:'A ∨ (A ∧ B)',parts:[{k:'simp',max:1,ask:'Simplifică (cu cel mult un literal).',ans:'A'}],
+ hints:['Poți distribui, dar există o regulă directă în tabelul 4.','Absorbția: F ∨ (F ∧ G) ≡ F.'],
+ sol:['Absorbție: <span class="f">A ∨ (A ∧ B) ≡ A</span>','Sau factor comun: <span class="f">A ∧ (1 ∨ B) ≡ A ∧ 1 ≡ A</span>']},
+{lv:'Nivel 4: forma perfectă',life:'Tabel: f(0,0)=0, f(0,1)=1, f(1,0)=1, f(1,1)=0.',f:'(A ∨ B) ∧ ¬(A ∧ B)',parts:[{k:'fdnp',ans:'(¬A∧B)∨(A∧¬B)'},{k:'fcnp',ans:'(A∨B)∧(¬A∨¬B)'}],
+ hints:['Folosește tabelul din enunț: f e 1 la (0,1) și (1,0), iar 0 la (0,0) și (1,1).','FDNP: câte un termen pe fiecare rând cu 1, cu bară pe variabilele 0. FCNP: câte o clauză pe fiecare rând cu 0, cu bară pe variabilele 1.'],
+ sol:['Rânduri cu 1: (0,1), (1,0). Termeni: <span class="f">(¬A∧B) ∨ (A∧¬B)</span> aceasta e <b>FDNP</b>.','Rânduri cu 0: (0,0), (1,1). Clauze: (0,0) → <span class="f">A ∨ B</span>, (1,1) → <span class="f">¬A ∨ ¬B</span>.','Le legi cu ∧: <span class="f">(A∨B) ∧ (¬A∨¬B)</span> aceasta e <b>FCNP</b>.']},
+{lv:'Nivel 4: forma perfectă',life:'Dacă plouă (A), iau geacă (B) și nu iau umbrelă (C).',f:'A → (B ∧ ¬C)',parts:[{k:'fcnp',ans:'(¬A∨B∨C)∧(¬A∨B∨¬C)∧(¬A∨¬B∨¬C)'}],
+ hints:['Formula e falsă când A=1 și (B ∧ ¬C) e fals. Scrie rândurile (A,B,C) cu f=0.','Rândurile cu 0 sunt (1,0,0), (1,0,1), (1,1,1). Pentru fiecare clauză: variabila 1 are bară, variabila 0 nu.'],
+ sol:['Rânduri cu 0: <b>(1,0,0)</b>, <b>(1,0,1)</b>, <b>(1,1,1)</b>.','(1,0,0): <span class="f">¬A ∨ B ∨ C</span>','(1,0,1): <span class="f">¬A ∨ B ∨ ¬C</span>','(1,1,1): <span class="f">¬A ∨ ¬B ∨ ¬C</span>','Le legi cu ∧: <span class="f">(¬A∨B∨C) ∧ (¬A∨B∨¬C) ∧ (¬A∨¬B∨¬C)</span> aceasta e <b>FCNP</b>.']}
+];
+const LAB={fnd:'Scrie FND:',fnc:'Scrie FNC:',simp:'Simplificat:',fdnp:'Scrie FDNP (toate variabilele în fiecare termen):',fcnp:'Scrie FCNP (toate variabilele în fiecare clauză):'};
+const FORMNAME={fnd:'FND',fnc:'FNC',fdnp:'FDNP',fcnp:'FCNP'};
+
+function ser(n){switch(n.t){case'v':return n.n;case'c':return n.v?'1':'0';case'not':return'¬'+ser(n.x);default:return'('+ser(n.a)+({and:'∧',or:'∨',imp:'→',eqv:'↔'}[n.t])+ser(n.b)+')';}}
+function rowsDiff(a,b){const vs=[...new Set([...vars(a),...vars(b)])].sort();for(let i=0;i<(1<<vs.length);i++){const e={};vs.forEach((v,j)=>e[v]=!!((i>>(vs.length-1-j))&1));const x=ev(a,e),y=ev(b,e);if(x!==y)return{at:vs.map(v=>v+'='+(+e[v])).join(', '),x,y};}return null;}
+const kids=n=>['a','b','x'].filter(k=>n[k]).map(k=>n[k]);
+const noArrows=n=>!(n.t==='imp'||n.t==='eqv')&&kids(n).every(noArrows);
+const negOnVars=n=>n.t==='not'?n.x.t==='v':kids(n).every(negOnVars);
+function badges(n){return[['Fără → și ↔',noArrows(n)],['Negații doar pe variabile',negOnVars(n)],['FND',isFND(n)],['FNC',isFNC(n)]].map(([t,v])=>'<span class="bd '+(v?'y':'n')+'">'+(v?'✓':'✗')+' '+t+'</span>').join('');}
+function formCheck(part,n,qv){
+ const k=part.k;
+ if(k==='fnd'&&!isFND(n))return{ok:false,msg:'Echivalent cu pasul dinainte, dar încă nu e FND. Trebuie un SAU de grupuri legate cu ȘI, cu bara doar pe variabile și fără → sau ↔.'};
+ if(k==='fnc'&&!isFNC(n))return{ok:false,msg:'Echivalent cu pasul dinainte, dar încă nu e FNC. Trebuie un ȘI de grupuri legate cu SAU, cu bara doar pe variabile și fără → sau ↔.'};
+ if(k==='simp'){const c=nLits(n);if(c>part.max)return{ok:false,msg:'Echivalent cu pasul dinainte, dar se poate simplifica mai mult (ai '+c+' litere, se poate cu cel mult '+part.max+').'};}
+ if(k==='fdnp'||k==='fcnp'){
+  const t=k==='fdnp'?'and':'or',outer=k==='fdnp'?'or':'and';
+  if(!(k==='fdnp'?isFND(n):isFNC(n)))return{ok:false,msg:'Echivalent cu pasul dinainte, dar încă nu e '+FORMNAME[k]+': verifică operatorii dintre grupuri și dintre litere.'};
+  const ps=flat(n,outer).map(p=>Object.assign({},p,{_t:t}));
+  if(!allHave(ps,qv))return{ok:false,msg:'Echivalent cu pasul dinainte, dar nu e perfectă: fiecare '+(k==='fdnp'?'termen':'clauză')+' trebuie să conțină toate variabilele ('+[...qv].sort().join(', ')+').'};}
+ return{ok:true,msg:'Corect! Ai ajuns la forma cerută.'};}
+
+// ---------- Interfață ----------
+const qs=document.getElementById('qs');let focused=null;const state=[];
+function pretty(s){return s.replace(/<->|<=>/g,'↔').replace(/->|=>/g,'→').replace(/[!~]/g,'¬').replace(/&/g,'∧').replace(/\|/g,'∨');}
+Q.forEach((q,qi)=>{
+ state.push({hints:0,sol:false,done:false,okParts:new Set(),hist:q.parts.map(()=>[q.f])});
+ const c=document.createElement('section');c.className='card';c.id='q'+qi;
+ let h=`<div class="qh"><span class="lv">Exercițiul ${qi+1} · ${q.lv}</span><span class="st" id="st${qi}"></span></div><p class="life">${q.life}</p><span class="f">${q.f}</span>`;
+ q.parts.forEach((p,pi)=>{const id=qi+'_'+pi;h+=`<div class="part"><label for="in${id}">${p.ask||LAB[p.k]} <span class="mut">(pas cu pas)</span></label><div id="sl${id}"><div class="sl"><b>Enunț</b><span class="f">${q.f}</span></div></div><div class="row"><input type="text" id="in${id}" data-q="${qi}" data-p="${pi}" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="următorul pas, ex: ¬A ∨ (B∧C)"><button data-add="${id}">Adaugă pasul</button><button class="sec" data-undo="${id}">Șterge ultimul pas</button></div><span class="f pv" id="pv${id}"></span><div class="fb" id="fb${id}" role="status"></div><div id="bd${id}"></div><div class="note" id="nt${id}"></div></div>`;});
+ h+=`<div><button class="sec" data-hint="${qi}" id="hb${qi}">Indiciu</button><button class="sec" data-sol="${qi}" id="sb${qi}">Arată rezolvarea</button></div><div id="hs${qi}"></div>`;
+ c.innerHTML=h;qs.appendChild(c);
+ q.parts.forEach((p,pi)=>{document.getElementById('bd'+qi+'_'+pi).innerHTML=badges(parse(q.f));});});
+bar(qs);
+function upd(){const done=state.filter(s=>s.done).length,clean=state.filter(s=>s.done&&!s.hints&&!s.sol).length;
+ document.getElementById('score').textContent='Rezolvate '+done+' din '+Q.length;
+ document.getElementById('clean').textContent='· fără indicii: '+clean;
+ document.getElementById('prog').style.width=(100*done/Q.length)+'%';
+ if(done===Q.length){const d=document.getElementById('done');d.hidden=false;document.getElementById('doneTx').textContent=clean===Q.length?'Toate rezolvate fără indicii. Ești gata de test.':'Ai rezolvat toate exercițiile, '+clean+' fără indicii. Reia pe cele cu indicii ca să le prinzi bine.';}}
+function setStatus(qi){const s=state[qi],st=document.getElementById('st'+qi),clean=!s.hints&&!s.sol;st.className='st '+(clean?'ok':'wa');st.textContent=clean?'Rezolvat':'Rezolvat cu ajutor';}
+qs.addEventListener('input',e=>{if(e.target.matches('input')){const id=e.target.dataset.q+'_'+e.target.dataset.p,pv=document.getElementById('pv'+id);pv.textContent=pretty(e.target.value);bar(pv);}});
+qs.addEventListener('focusin',e=>{if(e.target.matches('input'))focused=e.target;});
+qs.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('input')){document.querySelector(`[data-add="${e.target.dataset.q}_${e.target.dataset.p}"]`).click();}});
+qs.addEventListener('click',e=>{
+ const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.add){const id=b.dataset.add,[qi,pi]=id.split('_').map(Number),q=Q[qi],s=state[qi],inp=document.getElementById('in'+id),fb=document.getElementById('fb'+id),nt=document.getElementById('nt'+id);
+  const hist=s.hist[pi];let n,prev;
+  try{n=parse(inp.value);}catch(err){fb.className='fb bad';fb.textContent=err.message;return;}
+  prev=parse(hist[hist.length-1]);
+  const d=rowsDiff(prev,n);
+  if(d){fb.className='fb bad';fb.textContent='Aici te-ai pierdut: pasul nu e echivalent cu cel dinainte. La '+d.at+' pasul tău dă '+(+d.x)+', iar formula dinainte dă '+(+d.y)+'. Verifică regula folosită și încearcă din nou.';nt.textContent='';return;}
+  if(ser(n)===ser(prev)){fb.className='fb bad';fb.textContent='E aceeași formulă ca la pasul dinainte. Aplică o transformare.';nt.textContent='';return;}
+  hist.push(inp.value);
+  const row=document.createElement('div');row.className='sl';row.innerHTML='<b>Pasul '+(hist.length-1)+' ✓</b><span class="f"></span>';row.lastChild.textContent=pretty(inp.value);row.dataset.txt=pretty(inp.value);bar(row);const cb=document.createElement('button');cb.type='button';cb.className='cp';cb.textContent='Copiază';cb.onclick=()=>copyTxt(row.dataset.txt,cb);row.appendChild(cb);document.getElementById('sl'+id).appendChild(row);
+  inp.value='';document.getElementById('pv'+id).textContent='';
+  document.getElementById('bd'+id).innerHTML=badges(n);
+  const r=formCheck(q.parts[pi],n,vars(parse(q.f)));fb.className='fb '+(r.ok?'ok':'bad');fb.textContent=r.ok?r.msg:'Pas valid. '+r.msg;
+  nt.textContent=(isFND(n)&&isFNC(n)&&n.t!=='c')?'Formula ta e și FND, și FNC: un SAU de termeni cu câte un literal (FND) și, în același timp, un ȘI cu o singură clauză (FNC).':'';
+  if(r.ok){s.okParts.add(pi);if(s.okParts.size===q.parts.length&&!s.done){s.done=true;setStatus(qi);upd();}}
+ }
+ if(b.dataset.undo){const id=b.dataset.undo,[qi,pi]=id.split('_').map(Number),hist=state[qi].hist[pi];
+  if(hist.length>1){hist.pop();const L=document.getElementById('sl'+id);L.removeChild(L.lastChild);document.getElementById('bd'+id).innerHTML=badges(parse(hist[hist.length-1]));document.getElementById('fb'+id).textContent='';document.getElementById('nt'+id).textContent='';}}
+ if(b.dataset.hint!==undefined){const qi=+b.dataset.hint,q=Q[qi],s=state[qi];if(s.hints<q.hints.length){const d=document.createElement('div');d.className='hint';d.innerHTML='<b>Indiciu '+(s.hints+1)+':</b> '+q.hints[s.hints];document.getElementById('hs'+qi).appendChild(d);s.hints++;bar(d);if(s.hints>=q.hints.length)b.disabled=true;upd();}}
+ if(b.dataset.sol!==undefined){const qi=+b.dataset.sol,q=Q[qi];state[qi].sol=true;b.disabled=true;
+  const d=document.createElement('div');d.className='sol';d.innerHTML='<b>Rezolvare:</b>'+q.sol.map(x=>'<p>'+x+'</p>').join('')+'<p><b>Răspuns:</b> '+q.parts.map(p=>'<span class="f">'+p.ans+'</span>').join('')+'</p>';document.getElementById('hs'+qi).appendChild(d);bar(d);upd();}
+});
+document.getElementById('kb').addEventListener('mousedown',e=>{if(e.target.closest('button'))e.preventDefault();});
+document.getElementById('kb').addEventListener('click',e=>{
+ const b=e.target.closest('button');if(!b)return;const i=b.dataset.i;
+ let t=focused||document.querySelector('#qs input');if(!t)return;t.focus();
+ if(i==='⌫'){const s=t.selectionStart,en=t.selectionEnd;if(s!==en)t.setRangeText('',s,en,'end');else if(s>0)t.setRangeText('',s-1,s,'end');}
+ else t.setRangeText(i,t.selectionStart,t.selectionEnd,'end');
+ t.dispatchEvent(new Event('input',{bubbles:true}));});
+</script>
+</body>
+</html>
