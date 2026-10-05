@@ -1,0 +1,99 @@
+<title>De ce e și FND, și FNC</title>
+<style>
+/* Layout: o coloană îngustă, pași mari, fiecare cu un desen din căsuțe colorate */
+:root{--bg:#f6f7fb;--card:#ffffff;--tx:#1d2233;--mut:#5b6478;--bd:#d9deea;--term:#1f7a4d;--termbg:#dff3e8;--cl:#2b5fc2;--clbg:#e0eaff;--wa:#9a5b00;--wabg:#fff1d6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10131a;--card:#181c26;--tx:#e8ebf2;--mut:#98a2b3;--bd:#2a3040;--term:#6ee7a5;--termbg:#173325;--cl:#8db4ff;--clbg:#1a2a4d;--wa:#fbbf24;--wabg:#3a2d10;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10131a;--card:#181c26;--tx:#e8ebf2;--mut:#98a2b3;--bd:#2a3040;--term:#6ee7a5;--termbg:#173325;--cl:#8db4ff;--clbg:#1a2a4d;--wa:#fbbf24;--wabg:#3a2d10;color-scheme:dark}
+body{background:var(--bg);color:var(--tx);font:17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-inline:16px;padding-block:20px 60px}
+main{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+h1{font-size:1.6rem;line-height:1.2;margin:0;text-wrap:balance}
+h2{font-size:1.15rem;margin:0 0 8px;text-wrap:balance}
+p{margin:0 0 10px}p:last-child{margin-bottom:0}
+.mut{color:var(--mut)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:16px;min-width:0}
+.f{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.25rem;display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0}
+.n{text-decoration:overline}
+.box{border:2px solid;border-radius:8px;padding:4px 10px;display:inline-flex;gap:6px;align-items:center}
+.t{border-color:var(--term);background:var(--termbg);color:var(--term)}
+.c{border-color:var(--cl);background:var(--clbg);color:var(--cl)}
+.op{color:var(--mut)}
+.lab{font-size:.85rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.lab.t{color:var(--term)}.lab.c{color:var(--cl)}
+.warn{background:var(--wabg);border:1px solid var(--wa);border-radius:10px;padding:14px 16px;color:var(--tx)}
+.warn b{color:var(--wa)}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.num{font-family:ui-monospace,Menlo,Consolas,monospace}
+button{font:inherit;padding:8px 14px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--tx);cursor:pointer}
+button[aria-pressed="true"]{border-color:var(--cl);background:var(--clbg);color:var(--cl);font-weight:600}
+button:focus-visible{outline:3px solid var(--cl);outline-offset:2px}
+.sw{display:flex;gap:8px;flex-wrap:wrap}
+</style>
+<main>
+<h1>De ce <span class="f" style="display:inline-flex;font-size:1.3rem;margin:0"><span class="n">A</span><span class="op">∨</span>B<span class="op">∨</span>C</span> e și FND, și FNC</h1>
+<p class="mut" style="margin:0">Ghid pas cu pas. Linia deasupra unei litere înseamnă „non”.</p>
+
+<section class="card">
+<h2>Pasul 1. Trei cuvinte, trei culori</h2>
+<p><b>Literă</b> = o variabilă, cu sau fără bară: <span class="num">A</span>, <span class="num"><span class="n">B</span></span>.</p>
+<p><span class="lab t">Termen</span> = litere legate cu <b>ȘI (∧)</b>. Exemplu:</p>
+<div class="f"><span class="box t">A <span class="op">∧</span> <span class="n">B</span> <span class="op">∧</span> C</span></div>
+<p><span class="lab c">Clauză</span> = litere legate cu <b>SAU (∨)</b>. Exemplu:</p>
+<div class="f"><span class="box c">A <span class="op">∨</span> <span class="n">B</span> <span class="op">∨</span> C</span></div>
+<p>Contează un singur lucru: cum se leagă literele <b>în interiorul</b> grupului.</p>
+</section>
+
+<section class="card">
+<h2>Pasul 2. Cele două forme</h2>
+<p><b>FND</b> = un <b>SAU</b> de <span class="lab t">termeni</span>. Arată așa:</p>
+<div class="f"><span class="box t">A∧B</span><span class="op">∨</span><span class="box t">C∧D</span><span class="op">∨</span><span class="box t">E</span></div>
+<p><b>FNC</b> = un <b>ȘI</b> de <span class="lab c">clauze</span>. Arată așa:</p>
+<div class="f"><span class="box c">A∨B</span><span class="op">∧</span><span class="box c">C∨D</span><span class="op">∧</span><span class="box c">E</span></div>
+<p class="mut">Observă: grupul poate avea și o <b>singură literă</b> (ca E mai sus). O literă singură e un termen, dar și o clauză, pentru că nu are între ce litere să pui ∧ sau ∨.</p>
+</section>
+
+<section class="card">
+<h2>Pasul 3. Formula ta, privită în două feluri</h2>
+<p>Formula e aceeași. Alege cum o privești:</p>
+<div class="sw" role="group" aria-label="Alege forma">
+<button id="bd" aria-pressed="true" type="button">Ca FND</button>
+<button id="bc" aria-pressed="false" type="button">Ca FNC</button>
+</div>
+<div id="view"></div>
+</section>
+
+<section class="card">
+<h2>Pasul 4. Comparația cu numerele</h2>
+<p>Numărul <b>5</b> poate fi văzut ca:</p>
+<p>• o <b>sumă</b> cu un singur termen: <span class="num">(5)</span><br>• un <b>produs</b> cu un singur factor: <span class="num">(5)</span></p>
+<p>Nu scrii niciun + și niciun ×, dar ambele descrieri sunt adevărate.</p>
+<p><span class="num"><span class="n">A</span> ∨ B ∨ C</span> e la fel: un SAU între trei termeni cu o literă (FND) <b>și</b> un ȘI cu o singură clauză (FNC).</p>
+</section>
+
+<section class="card">
+<h2>Pasul 5. Când trebuie să muncești</h2>
+<div class="row">
+<div><p class="lab c">E deja FNC</p><div class="f"><span class="box c"><span class="n">A</span>∨B</span><span class="op">∧</span><span class="box c"><span class="n">A</span>∨C</span></div><p class="mut">Pentru FND ai de distribuit.</p></div>
+<div><p class="lab t">E deja FND</p><div class="f"><span class="box t"><span class="n">A</span>∧B</span><span class="op">∨</span><span class="box t">C∧D</span></div><p class="mut">Pentru FNC ai de distribuit.</p></div>
+</div>
+<p style="margin-top:12px">Dacă formula are <b>numai ∨</b> sau <b>numai ∧</b> (ca a ta), nu mai ai nimic de distribuit și e gata pentru ambele.</p>
+</section>
+
+<section class="warn">
+<p><b>Ce îți cere profesorul:</b> dacă la lecție ai primit exerciții de forma <span class="num">(A∨B) ∧ (B∨C)</span>, acelea sunt cazurile în care <i>vezi</i> ∧ între paranteze, deci FNC clasic. Pentru <span class="num"><span class="n">A</span>∨B∨C</span> poți scrie: „e deja FNC, o singură clauză”. Dacă nu ești sigur ce așteaptă, întreabă-l.</p>
+</section>
+</main>
+<script>
+const V=document.getElementById('view'),bd=document.getElementById('bd'),bc=document.getElementById('bc');
+const A='<span class="n">A</span>';
+function show(k){
+ bd.setAttribute('aria-pressed',k==='d');bc.setAttribute('aria-pressed',k==='c');
+ if(k==='d'){
+  V.innerHTML='<div class="f"><span class="box t">'+A+'</span><span class="op">∨</span><span class="box t">B</span><span class="op">∨</span><span class="box t">C</span></div>'+
+  '<p>Ai <b>3 termeni</b> legați cu SAU. Fiecare termen are o singură literă, deci nu are niciun ∧ în el. Asta e voie. <b>Este FND.</b></p>';
+ }else{
+  V.innerHTML='<div class="f"><span class="box c">'+A+' <span class="op">∨</span> B <span class="op">∨</span> C</span></div>'+
+  '<p>Ai <b>1 clauză</b> cu trei litere legate cu SAU. Un ȘI cu un singur membru nu mai are ce să lege, deci nu apare niciun ∧. Asta e voie. <b>Este FNC.</b></p>';
+ }
+}
+bd.onclick=()=>show('d');bc.onclick=()=>show('c');show('d');
+</script>
